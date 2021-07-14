@@ -12,7 +12,7 @@ public class TestPrefabCreationService
 	{
 		// Arrange
 		Transform testObject = new GameObject().transform;
-		PrefabCreationService<Transform> prefabCreationService = new PrefabCreationService<Transform>(testObject);
+		UnityObjectCreationService<Transform> prefabCreationService = new UnityObjectCreationService<Transform>(testObject);
 
 		// Act
 		Transform instantiatedObject = prefabCreationService.Create();
@@ -22,7 +22,7 @@ public class TestPrefabCreationService
 		Assert.IsTrue(allTransforms.Any((Transform t) => t == instantiatedObject));
 
 		// Clean up
-		Object.Destroy(instantiatedObject);
-		Object.Destroy(testObject);
+		Object.Destroy(instantiatedObject.gameObject);
+		Object.Destroy(testObject.gameObject);
 	}
 }

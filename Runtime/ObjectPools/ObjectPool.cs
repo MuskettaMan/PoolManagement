@@ -4,13 +4,33 @@ using System;
 
 public class ObjectPool<T> : IPooler<T>, IDisposable
 {
+	[Serializable]
+	public class ObjectPoolConfig
+	{
+		public int initialCapacity;
+		public bool shouldDestroyPooledObjects = true;
+		public bool shouldDestroyInUseObjects = false;
+
+		public ObjectPoolConfig(int initialCapacity = 0, bool shouldDestroyPooledObjects = true, bool shouldDestroyInUseObjects = false)
+		{
+			// Clamps value to contain only positive or zero.
+			this.initialCapacity = Mathf.Max(initialCapacity, 0);
+			this.shouldDestroyPooledObjects = shouldDestroyPooledObjects;
+			this.shouldDestroyInUseObjects = shouldDestroyInUseObjects;
+		}
+	}
+
 	private readonly ICreationService<T> creationService;
 	private readonly IPoolManagementService<T> poolManagementService;
 	private readonly IDestructionService<T> destructionService;
-	private Stack<T> pooled = new Stack<T>();
-	private HashSet<T> inUse = new HashSet<T>();
+	private readonly ObjectPoolConfig config;
+	private Stack<T> pooled;
+	private HashSet<T> inUse;
 
-	public ObjectPool(ICreationService<T> creationService, IPoolManagementService<T> poolManagementService, IDestructionService<T> destructionService, int initialSize)
+	public ObjectPool(ICreationService<T> creationService, 
+					  IPoolManagementService<T> poolManagementService, 
+					  IDestructionService<T> destructionService,
+					  ObjectPoolConfig config = null)
 	{
 		if (creationService == null)
 			throw new ArgumentNullException("creationService");
@@ -18,13 +38,19 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 			throw new ArgumentNullException("poolManagementService");
 		if (destructionService == null)
 			throw new ArgumentNullException("destructionService");
-		initialSize = Mathf.Max(initialSize, 0);
+		if (config == null)
+			config = new ObjectPoolConfig();
+
+		// Clamp max value to positive.
+		this.config = config;
+		this.pooled = new Stack<T>(this.config.initialCapacity);
+		this.inUse = new HashSet<T>();
 
 		this.creationService = creationService;
 		this.poolManagementService = poolManagementService;
 		this.destructionService = destructionService;
 
-		for (int i = 0; i < initialSize; i++)
+		for (int i = 0; i < this.config.initialCapacity; i++)
 		{
 			T @object = creationService.Create();
 			pooled.Push(@object);
@@ -60,10 +86,24 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 
 	public void Dispose()
 	{
-		foreach (T @object in pooled)
+		if (config.shouldDestroyPooledObjects)
 		{
-			poolManagementService.ObjectDestroyed(@object);
-			destructionService.Destroy(@object);
+			foreach (T @object in pooled)
+			{
+				poolManagementService.ObjectDestroyed(@object);
+				destructionService.Destroy(@object);
+			}
+			pooled.Clear();
+		}
+
+		if(config.shouldDestroyInUseObjects)
+		{
+			foreach (T @object in inUse)
+			{
+				poolManagementService.ObjectDestroyed(@object);
+				destructionService.Destroy(@object);
+			}
+			inUse.Clear();
 		}
 	}
 
@@ -82,9 +122,4 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 
 		return inUse.Contains(@object);
 	}
-}
-
-public interface IDestructionService<T>
-{
-	void Destroy(T @object);
 }

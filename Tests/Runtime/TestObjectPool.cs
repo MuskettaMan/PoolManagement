@@ -11,7 +11,8 @@ public class TestObjectPool : MonoBehaviour
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		ObjectPool<Transform> objectPool = new ObjectPool<Transform>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, 5);
+		var config = new ObjectPool<Transform>.ObjectPoolConfig(initialCapacity: 5);
+		ObjectPool<Transform> objectPool = new ObjectPool<Transform>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Act
 		Transform requestedObject = objectPool.RequestObject();

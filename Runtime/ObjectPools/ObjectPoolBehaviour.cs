@@ -29,7 +29,7 @@ public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T
 		objectPool = new ObjectPool<T>(CreationService, PoolManagementService, DestructionService, config);
 	}
 
-	private void OnDestroy()
+	protected virtual void OnDestroy()
 	{
 		objectPool.Dispose();
 	}

@@ -5,6 +5,6 @@ public class PoolableComponentObjectPoolBehaviour<T> : ComponentObjectPoolBehavi
 
 	protected override IPoolManagementService<T> InitializePoolManagementService()
 	{
-		return new PoolableComponentPoolManagementService<T>(new GameObjectPoolManagementService(useSendMessages));
+		return new PoolableComponentPoolManagementService<T>(new GameObjectPoolManagementService(useSendMessages), new PoolableObjectPoolManagementService<T>());
 	}
 }

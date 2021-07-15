@@ -2,9 +2,15 @@ using UnityEngine;
 
 public class PoolableComponentPoolManagementService<T> : ComponentPoolManagementService<T> where T : Component, IPoolable
 {
+	private readonly PoolableObjectPoolManagementService<T> poolableObjectPoolManagementService;
 
-	public PoolableComponentPoolManagementService(GameObjectPoolManagementService gameObjectPoolManagementService) : base(gameObjectPoolManagementService)
-	{ }
+	public PoolableComponentPoolManagementService(
+		GameObjectPoolManagementService gameObjectPoolManagementService,
+		PoolableObjectPoolManagementService<T> poolableObjectPoolManagementService
+	) : base(gameObjectPoolManagementService)
+	{
+		this.poolableObjectPoolManagementService = poolableObjectPoolManagementService;
+	}
 
 	public override void ObjectCreated(T @object)
 	{
@@ -19,12 +25,12 @@ public class PoolableComponentPoolManagementService<T> : ComponentPoolManagement
 	public override void ObjectRequested(T @object)
 	{
 		base.ObjectRequested(@object);
-		@object.Requested();
+		poolableObjectPoolManagementService.ObjectRequested(@object);
 	}
 
 	public override void ObjectReturned(T @object)
 	{
 		@object.Returned();
-		base.ObjectReturned(@object);
+		poolableObjectPoolManagementService.ObjectReturned(@object);
 	}
 }

@@ -3,6 +3,7 @@
 public class GameObjectPoolManagementService : IPoolManagementService<GameObject>
 {
 	private bool useSendMessages;
+	private Transform originalParent;
 
 	public GameObjectPoolManagementService(bool useSendMessages)
 	{
@@ -11,6 +12,7 @@ public class GameObjectPoolManagementService : IPoolManagementService<GameObject
 
 	public void ObjectCreated(GameObject @object)
 	{
+		originalParent = @object.transform;
 		@object.SetActive(false);
 	}
 
@@ -25,6 +27,7 @@ public class GameObjectPoolManagementService : IPoolManagementService<GameObject
 	{
 		if (useSendMessages)
 			@object.SendMessage("Returned", SendMessageOptions.DontRequireReceiver);
+		@object.transform.SetParent(originalParent);
 		@object.SetActive(false);
 	}
 

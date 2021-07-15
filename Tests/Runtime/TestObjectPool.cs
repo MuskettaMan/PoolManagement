@@ -3,35 +3,176 @@ using System.Collections.Generic;
 using UnityEngine;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 public class TestObjectPool : MonoBehaviour
 {
+	public class TestPoolableObject { }
+
 	[Test]
-	public void RequestObject_FromPool_ReturnsObject()
+	public void Constructing_WithMoreThanZeroInitialSize_NotifiesCreationService()
+	{
+		// Arrange
+		// Create pool
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1);
+
+		// Act
+		var objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		// Assert
+		TestPoolableObject p = objectPool.RequestObject();
+		dependencies.poolManagementService.Received().ObjectCreated(p);
+	}
+
+	[Test]
+	public void Constructing_WithNullCreationService_ThrowsArgumentNullException()
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<Transform>.ObjectPoolConfig(initialCapacity: 5);
-		ObjectPool<Transform> objectPool = new ObjectPool<Transform>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Act
-		Transform requestedObject = objectPool.RequestObject();
+		TestDelegate code = () => new ObjectPool<TestPoolableObject>(null, dependencies.poolManagementService, dependencies.destructionService);
 
 		// Assert
-		dependencies.poolManagementService.Received().ObjectRequested(requestedObject);
+		Assert.Throws<ArgumentNullException>(code);
+	}
+
+	[Test]
+	public void Constructing_WithNullPoolManagementService_ThrowsArgumentNullException()
+	{
+		// Arrange
+		var dependencies = CreateDependencies();
+
+		// Act
+		TestDelegate code = () => new ObjectPool<TestPoolableObject>(dependencies.creationService, null, dependencies.destructionService);
+
+		// Assert
+		Assert.Throws<ArgumentNullException>(code);
+	}
+
+	[Test]
+	public void Constructing_WithNullDestructionService_ThrowsArgumentNullException()
+	{
+		// Arrange
+		var dependencies = CreateDependencies();
+
+		// Act
+		TestDelegate code = () => new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, null);
+
+		// Assert
+		Assert.Throws<ArgumentNullException>(code);
+	}
+
+	[Test]
+	public void RequestObject_AtAll_ReturnsNotNullObject()
+	{
+		// Arrange
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
+		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		// Act
+		TestPoolableObject requestedObject = objectPool.RequestObject();
+
+		// Assert
+		Assert.IsNotNull(requestedObject);
 
 		// Clean up
-		objectPool.ReturnObject(requestedObject);
 		objectPool.Dispose();
 	}
 
-	private Dependencies<Transform> CreateDependencies()
+	[Test]
+	public void RequestObject_FromPool_DoesntCreateObject()
 	{
-		ICreationService<Transform> creationService = Substitute.For<ICreationService<Transform>>();
-		creationService.Create().Returns(new GameObject().transform);
-		IPoolManagementService<Transform> poolManagementService = Substitute.For<IPoolManagementService<Transform>>();
-		IDestructionService<Transform> destructionService = Substitute.For<IDestructionService<Transform>>();
-		Dependencies<Transform> dependencies = new Dependencies<Transform>(creationService, poolManagementService, destructionService);
+		// Arrange
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
+		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		dependencies.creationService.ClearReceivedCalls();
+
+		// Act
+		objectPool.RequestObject();
+
+		// Assert
+		dependencies.creationService.DidNotReceive().Create();
+
+		// Clean up
+		objectPool.Dispose();
+	}
+
+	[Test]
+	public void RequestObject_FromEmptyPool_CreatesObject()
+	{
+		// Arrange
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 0, true, true);
+		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		// Act
+		objectPool.RequestObject();
+
+		// Assert
+		dependencies.creationService.Received().Create();
+
+		// Clean up
+		objectPool.Dispose();
+	}
+
+	[Test]
+	public void ReturnObject_AfterRequesting_NotifiesPoolManagement()
+	{
+		// Arrange
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 5, true, true);
+		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		// Act
+		var instance = objectPool.RequestObject();
+		objectPool.ReturnObject(instance);
+
+		// Assert
+		dependencies.poolManagementService.Received().ObjectReturned(instance);
+
+		// Clean up
+		objectPool.Dispose();
+	}
+
+	[Test]
+	public void Dispose_WithPooledAndInUseObject_NotifiesDestructionService([Values(true, false)]bool inUse, [Values(true, false)] bool pooled)
+	{
+		// Arrange
+		// Create pool
+		var dependencies = CreateDependencies();
+		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 5, inUse, pooled);
+		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+
+		// Create pool with half the elements active and the other dormant.
+		TestPoolableObject[] all = new TestPoolableObject[2];
+		for (int i = 0; i < all.Length; i++)
+		{
+			all[i] = objectPool.RequestObject();
+		}
+		objectPool.ReturnObject(all[1]);
+
+		// Act
+		objectPool.Dispose();
+
+		// Assert
+		if (inUse)
+			dependencies.poolManagementService.Received().ObjectDestroyed(all[0]);
+		if(pooled)
+			dependencies.poolManagementService.Received().ObjectDestroyed(all[1]);
+	}
+
+	private Dependencies<TestPoolableObject> CreateDependencies()
+	{
+		ICreationService<TestPoolableObject> creationService = Substitute.For<ICreationService<TestPoolableObject>>();
+		creationService.Create().Returns(new TestPoolableObject());
+		IPoolManagementService<TestPoolableObject> poolManagementService = Substitute.For<IPoolManagementService<TestPoolableObject>>();
+		IDestructionService<TestPoolableObject> destructionService = Substitute.For<IDestructionService<TestPoolableObject>>();
+		Dependencies<TestPoolableObject> dependencies = new Dependencies<TestPoolableObject>(creationService, poolManagementService, destructionService);
 		return dependencies;
 	}
 

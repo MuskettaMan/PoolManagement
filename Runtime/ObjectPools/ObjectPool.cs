@@ -25,7 +25,7 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 	private readonly IDestructionService<T> destructionService;
 	private readonly ObjectPoolConfig config;
 	private Stack<T> pooled;
-	private HashSet<T> inUse;
+	private List<T> inUse;
 
 	public ObjectPool(ICreationService<T> creationService, 
 					  IPoolManagementService<T> poolManagementService, 
@@ -41,10 +41,9 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 		if (config == null)
 			config = new ObjectPoolConfig();
 
-		// Clamp max value to positive.
 		this.config = config;
 		this.pooled = new Stack<T>(this.config.initialCapacity);
-		this.inUse = new HashSet<T>();
+		this.inUse = new List<T>(this.config.initialCapacity);
 
 		this.creationService = creationService;
 		this.poolManagementService = poolManagementService;
@@ -76,10 +75,11 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 	{
 		if (@object == null)
 			throw new ArgumentNullException("@object");
-		if (!inUse.Contains(@object))
+		int index = inUse.IndexOf(@object);
+		if (index == -1)
 			throw new ArgumentException("Returned object doesn't belong in this pool.");
 
-		inUse.Remove(@object);
+		inUse.RemoveAt(index);
 		pooled.Push(@object);
 		poolManagementService.ObjectReturned(@object);
 	}

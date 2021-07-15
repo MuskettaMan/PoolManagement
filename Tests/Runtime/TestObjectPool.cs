@@ -7,7 +7,7 @@ using System;
 
 public class TestObjectPool : MonoBehaviour
 {
-	public class TestPoolableObject { }
+	public class PoolableObject { }
 
 	[Test]
 	public void Constructing_WithMoreThanZeroInitialSize_NotifiesCreationService()
@@ -15,13 +15,13 @@ public class TestObjectPool : MonoBehaviour
 		// Arrange
 		// Create pool
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 1);
 
 		// Act
-		var objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Assert
-		TestPoolableObject p = objectPool.RequestObject();
+		PoolableObject p = objectPool.RequestObject();
 		dependencies.poolManagementService.Received().ObjectCreated(p);
 	}
 
@@ -32,7 +32,7 @@ public class TestObjectPool : MonoBehaviour
 		var dependencies = CreateDependencies();
 
 		// Act
-		TestDelegate code = () => new ObjectPool<TestPoolableObject>(null, dependencies.poolManagementService, dependencies.destructionService);
+		TestDelegate code = () => new ObjectPool<PoolableObject>(null, dependencies.poolManagementService, dependencies.destructionService);
 
 		// Assert
 		Assert.Throws<ArgumentNullException>(code);
@@ -45,7 +45,7 @@ public class TestObjectPool : MonoBehaviour
 		var dependencies = CreateDependencies();
 
 		// Act
-		TestDelegate code = () => new ObjectPool<TestPoolableObject>(dependencies.creationService, null, dependencies.destructionService);
+		TestDelegate code = () => new ObjectPool<PoolableObject>(dependencies.creationService, null, dependencies.destructionService);
 
 		// Assert
 		Assert.Throws<ArgumentNullException>(code);
@@ -58,7 +58,7 @@ public class TestObjectPool : MonoBehaviour
 		var dependencies = CreateDependencies();
 
 		// Act
-		TestDelegate code = () => new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, null);
+		TestDelegate code = () => new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, null);
 
 		// Assert
 		Assert.Throws<ArgumentNullException>(code);
@@ -69,11 +69,11 @@ public class TestObjectPool : MonoBehaviour
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
-		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
+		ObjectPool<PoolableObject> objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Act
-		TestPoolableObject requestedObject = objectPool.RequestObject();
+		PoolableObject requestedObject = objectPool.RequestObject();
 
 		// Assert
 		Assert.IsNotNull(requestedObject);
@@ -87,8 +87,8 @@ public class TestObjectPool : MonoBehaviour
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
-		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 1, true, true);
+		ObjectPool<PoolableObject> objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		dependencies.creationService.ClearReceivedCalls();
 
@@ -107,8 +107,8 @@ public class TestObjectPool : MonoBehaviour
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 0, true, true);
-		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 0, true, true);
+		ObjectPool<PoolableObject> objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Act
 		objectPool.RequestObject();
@@ -125,8 +125,8 @@ public class TestObjectPool : MonoBehaviour
 	{
 		// Arrange
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 5, true, true);
-		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 5, true, true);
+		ObjectPool<PoolableObject> objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Act
 		var instance = objectPool.RequestObject();
@@ -145,11 +145,11 @@ public class TestObjectPool : MonoBehaviour
 		// Arrange
 		// Create pool
 		var dependencies = CreateDependencies();
-		var config = new ObjectPool<TestPoolableObject>.ObjectPoolConfig(initialCapacity: 5, inUse, pooled);
-		ObjectPool<TestPoolableObject> objectPool = new ObjectPool<TestPoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
+		var config = new ObjectPool<PoolableObject>.ObjectPoolConfig(initialCapacity: 5, inUse, pooled);
+		ObjectPool<PoolableObject> objectPool = new ObjectPool<PoolableObject>(dependencies.creationService, dependencies.poolManagementService, dependencies.destructionService, config);
 
 		// Create pool with half the elements active and the other dormant.
-		TestPoolableObject[] all = new TestPoolableObject[2];
+		PoolableObject[] all = new PoolableObject[2];
 		for (int i = 0; i < all.Length; i++)
 		{
 			all[i] = objectPool.RequestObject();
@@ -166,13 +166,13 @@ public class TestObjectPool : MonoBehaviour
 			dependencies.poolManagementService.Received().ObjectDestroyed(all[1]);
 	}
 
-	private Dependencies<TestPoolableObject> CreateDependencies()
+	private Dependencies<PoolableObject> CreateDependencies()
 	{
-		ICreationService<TestPoolableObject> creationService = Substitute.For<ICreationService<TestPoolableObject>>();
-		creationService.Create().Returns(new TestPoolableObject());
-		IPoolManagementService<TestPoolableObject> poolManagementService = Substitute.For<IPoolManagementService<TestPoolableObject>>();
-		IDestructionService<TestPoolableObject> destructionService = Substitute.For<IDestructionService<TestPoolableObject>>();
-		Dependencies<TestPoolableObject> dependencies = new Dependencies<TestPoolableObject>(creationService, poolManagementService, destructionService);
+		ICreationService<PoolableObject> creationService = Substitute.For<ICreationService<PoolableObject>>();
+		creationService.Create().Returns(new PoolableObject());
+		IPoolManagementService<PoolableObject> poolManagementService = Substitute.For<IPoolManagementService<PoolableObject>>();
+		IDestructionService<PoolableObject> destructionService = Substitute.For<IDestructionService<PoolableObject>>();
+		Dependencies<PoolableObject> dependencies = new Dependencies<PoolableObject>(creationService, poolManagementService, destructionService);
 		return dependencies;
 	}
 

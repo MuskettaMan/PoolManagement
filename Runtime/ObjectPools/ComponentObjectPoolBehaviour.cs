@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ComponentObjectPoolBehaviour<T> : ObjectPoolBehaviour<T> where T : Component
+public abstract class ComponentObjectPoolBehaviour<T> : ObjectPoolBehaviour<T> where T : Component
 {
 	[SerializeField]
 	protected bool useSendMessages;

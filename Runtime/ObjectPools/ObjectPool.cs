@@ -61,9 +61,14 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 	{
 		T objectToBeSend;
 		if(pooled.Count == 0)
+		{
 			objectToBeSend = creationService.Create();
+			poolManagementService.ObjectCreated(objectToBeSend);
+		}
 		else
+		{
 			objectToBeSend = pooled.Pop();
+		}
 
 		inUse.Add(objectToBeSend);
 		poolManagementService.ObjectRequested(objectToBeSend);

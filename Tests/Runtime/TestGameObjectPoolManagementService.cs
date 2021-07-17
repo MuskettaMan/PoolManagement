@@ -20,7 +20,7 @@ public class TestGameObjectPoolManagementService
 	[TearDown]
 	public void TearDown()
 	{
-		Object.Destroy(gameObjectPoolBehaviour);
+		Object.Destroy(gameObjectPoolBehaviour.gameObject);
 	}
 
 	[Test]

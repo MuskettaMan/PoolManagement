@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObjectPoolBehaviour : ObjectPoolBehaviour<GameObject>
+public sealed class GameObjectPoolBehaviour : ObjectPoolBehaviour<GameObject>
 {
 	[SerializeField]
 	private bool useSendMessages;

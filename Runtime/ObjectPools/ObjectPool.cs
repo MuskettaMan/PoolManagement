@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Collections.ObjectModel;
 
 public class ObjectPool<T> : IPooler<T>, IDisposable
 {
@@ -19,6 +20,9 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 			this.shouldDestroyInUseObjects = shouldDestroyInUseObjects;
 		}
 	}
+
+	public ReadOnlyCollection<T> Pooled => new ReadOnlyCollection<T>(pooled.ToArray());
+	public ReadOnlyCollection<T> InUse { get; private set; }
 
 	private readonly ICreationService<T> creationService;
 	private readonly IPoolManagementService<T> poolManagementService;
@@ -44,6 +48,8 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 		this.config = config;
 		this.pooled = new Stack<T>(this.config.initialCapacity);
 		this.inUse = new List<T>(this.config.initialCapacity);
+
+		this.InUse = inUse.AsReadOnly();
 
 		this.creationService = creationService;
 		this.poolManagementService = poolManagementService;

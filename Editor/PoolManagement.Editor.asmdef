@@ -1,6 +1,9 @@
 {
     "name": "PoolManagement.Editor",
-    "references": [],
+    "rootNamespace": "",
+    "references": [
+        "GUID:fb13b2711622f5d40a5fe37c7b702973"
+    ],
     "includePlatforms": [
         "Editor"
     ],

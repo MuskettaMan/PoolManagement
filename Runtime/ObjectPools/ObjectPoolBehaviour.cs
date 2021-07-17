@@ -14,7 +14,7 @@ public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T
 	[SerializeField]
 	private Transform pooledObjectsParent;
 
-	private ObjectPool<T> objectPool;
+	public ObjectPool<T> ObjectPool { get; private set; }
 
 	protected ICreationService<T> CreationService { get; private set; }
 	protected IPoolManagementService<T> PoolManagementService { get; private set; }
@@ -26,16 +26,16 @@ public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T
 	protected virtual void Awake()
 	{
 		InitializeServices();
-		objectPool = new ObjectPool<T>(CreationService, PoolManagementService, DestructionService, config);
+		ObjectPool = new ObjectPool<T>(CreationService, PoolManagementService, DestructionService, config);
 	}
 
 	protected virtual void OnDestroy()
 	{
-		objectPool.Dispose();
+		ObjectPool.Dispose();
 	}
 
-	public T RequestObject() => objectPool.RequestObject();
-	public void ReturnObject(T @object) => objectPool.ReturnObject(@object);
+	public T RequestObject() => ObjectPool.RequestObject();
+	public void ReturnObject(T @object) => ObjectPool.ReturnObject(@object);
 
 	protected virtual ICreationService<T> InitializeCreationService()
 	{

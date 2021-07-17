@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityObject = UnityEngine.Object;
+using System;
 
 public class UnityObjectCreationService<T> : ICreationService<T> where T : UnityObject
 {
@@ -8,6 +9,9 @@ public class UnityObjectCreationService<T> : ICreationService<T> where T : Unity
 
 	public UnityObjectCreationService(T prefab, Transform parent = null)
 	{
+		if (prefab == null)
+			throw new ArgumentNullException(nameof(prefab));
+
 		this.prefab = prefab;
 		this.parent = parent;
 	}

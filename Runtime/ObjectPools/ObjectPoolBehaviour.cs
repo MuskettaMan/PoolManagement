@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T : Object
 {
 	[SerializeField]
-	private T prefab;
+	protected T prefab;
 
 	[SerializeField]
 	private ObjectPool<T>.ObjectPoolConfig config;

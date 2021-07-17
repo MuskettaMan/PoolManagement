@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-public class TestObjectPoolBehaviour : MonoBehaviour
+public class TestObjectPoolBehaviour
 {
 	public class PoolableObject : MonoBehaviour { }
 	public class TestableObjectPoolBehaviour : ObjectPoolBehaviour<PoolableObject>
@@ -30,7 +30,7 @@ public class TestObjectPoolBehaviour : MonoBehaviour
 		Assert.IsNotNull(@object);
 
 		// Clean up
-		Destroy(pool);
+		Object.Destroy(pool);
 	}
 
 	[UnityTest]
@@ -42,7 +42,7 @@ public class TestObjectPoolBehaviour : MonoBehaviour
 		pool.ReturnObject(@object);
 
 		// Act
-		Destroy(pool);
+		Object.Destroy(pool);
 
 		yield return null;
 
@@ -62,7 +62,7 @@ public class TestObjectPoolBehaviour : MonoBehaviour
 		Assert.AreEqual(pool.transform, @object.transform.parent);
 
 		// Clean up
-		Destroy(pool);
+		Object.Destroy(pool);
 	}
 
 

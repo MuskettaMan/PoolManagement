@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestPoolableObjectPoolManagementService : MonoBehaviour
+public class TestPoolableObjectPoolManagementService 
 {
 	[Test]
 	public void OnRequest_OfPoolableObject_RequestedIsCalledOnObject()

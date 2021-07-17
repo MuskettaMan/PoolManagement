@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 
-public class TestObjectPool : MonoBehaviour
+public class TestObjectPool
 {
 	public class PoolableObject { }
 

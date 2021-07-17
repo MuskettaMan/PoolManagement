@@ -3,18 +3,18 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection;
 using UnityEngine.TestTools;
+using UnityEditor;
 
 public class TestGameObjectPoolManagementService
 {
-
-
-	public TestableGameObjectPoolBehaviour gameObjectPoolBehaviour;
+	private GameObjectPoolBehaviour gameObjectPoolBehaviour;
 
 	[SetUp]
 	public void SetUp()
 	{
-		gameObjectPoolBehaviour = new GameObject().AddComponent<TestableGameObjectPoolBehaviour>();
+		gameObjectPoolBehaviour = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObjectPoolBehaviour>("Packages/musketta.poolmanagement/Tests/Runtime/Prefabs/GameObjectPoolBehaviour.prefab"));
 	}
 	
 	[TearDown]

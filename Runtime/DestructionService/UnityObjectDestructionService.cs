@@ -1,5 +1,5 @@
-﻿using UnityObject = UnityEngine.Object;
-using System;
+﻿using System;
+using UnityObject = UnityEngine.Object;
 
 public class UnityObjectDestructionService<T> : IDestructionService<T> where T : UnityObject
 {

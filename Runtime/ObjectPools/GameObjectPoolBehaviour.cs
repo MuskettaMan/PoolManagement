@@ -1,14 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public sealed class GameObjectPoolBehaviour : ObjectPoolBehaviour<GameObject>
 {
 	[SerializeField]
 	private bool useSendMessages;
 
-	protected override IPoolManagementService<GameObject> InitializePoolManagementService()
-	{
-		return new GameObjectPoolManagementService(useSendMessages);
-	}
+	protected override IPoolManagementService<GameObject> InitializePoolManagementService() => new GameObjectPoolManagementService(useSendMessages);
 }

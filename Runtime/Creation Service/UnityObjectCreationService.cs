@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityObject = UnityEngine.Object;
-using System;
 
 public class UnityObjectCreationService<T> : ICreationService<T> where T : UnityObject
 {
@@ -16,8 +16,5 @@ public class UnityObjectCreationService<T> : ICreationService<T> where T : Unity
 		this.parent = parent;
 	}
 
-	public T Create()
-	{
-		return UnityObject.Instantiate(prefab, parent);
-	}
+	public T Create() => UnityObject.Instantiate(prefab, parent);
 }

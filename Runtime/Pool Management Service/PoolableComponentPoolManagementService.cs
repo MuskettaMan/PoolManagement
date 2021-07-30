@@ -7,20 +7,11 @@ public class PoolableComponentPoolManagementService<T> : ComponentPoolManagement
 	public PoolableComponentPoolManagementService(
 		GameObjectPoolManagementService gameObjectPoolManagementService,
 		PoolableObjectPoolManagementService<T> poolableObjectPoolManagementService
-	) : base(gameObjectPoolManagementService)
-	{
-		this.poolableObjectPoolManagementService = poolableObjectPoolManagementService;
-	}
+	) : base(gameObjectPoolManagementService) => this.poolableObjectPoolManagementService = poolableObjectPoolManagementService;
 
-	public override void ObjectCreated(T @object)
-	{
-		base.ObjectCreated(@object);
-	}
+	public override void ObjectCreated(T @object) => base.ObjectCreated(@object);
 
-	public override void ObjectDestroyed(T @object)
-	{
-		base.ObjectDestroyed(@object);
-	}
+	public override void ObjectDestroyed(T @object) => base.ObjectDestroyed(@object);
 
 	public override void ObjectRequested(T @object)
 	{

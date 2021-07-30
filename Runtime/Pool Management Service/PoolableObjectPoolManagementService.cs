@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PoolableObjectPoolManagementService<T> : IPoolManagementService<T> where T : IPoolable
+﻿public class PoolableObjectPoolManagementService<T> : IPoolManagementService<T> where T : IPoolable
 {
 	public void ObjectCreated(T @object) { }
 	public void ObjectDestroyed(T @object) { }

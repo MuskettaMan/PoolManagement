@@ -1,9 +1,7 @@
 #if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 [CanEditMultipleObjects]
 public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
@@ -20,12 +18,6 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 		{
 			objectPools[i] = (ObjectPoolBehaviour<T>)targets[i];
 		}
-
-		if (serializedObject.FindProperty("pooledObjectsParent").objectReferenceValue == null)
-		{
-			serializedObject.FindProperty("pooledObjectsParent").objectReferenceValue = objectPool.transform;
-			serializedObject.ApplyModifiedProperties();
-		}
 	}
 
 	public override void OnInspectorGUI()
@@ -37,9 +29,12 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 
 		if (Application.isPlaying)
 		{
+			if (objectPool.ObjectPool == null)
+				return;
+
 			EditorGUILayout.Space();
 
-			if(objectPool.ObjectPool.InUse.Count + objectPool.ObjectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
+			if (objectPool.ObjectPool.InUse.Count + objectPool.ObjectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
 			{
 				EditorGUILayout.HelpBox($"Because there are more than {COMBINED_POOL_OBJECT_TOTAL_CAP} {typeof(T).Name}s being pooled the extended editor won't be shown.", MessageType.Warning);
 				return;
@@ -85,7 +80,7 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 					{
 						EditorGUI.BeginDisabledGroup(true);
 						{
-							EditorGUILayout.ObjectField(objectPool.ObjectPool.Pooled[i], typeof(T), true);
+							EditorGUILayout.ObjectField(objectPool.ObjectPool.Pooled[i], typeof(T), true, GUILayout.Height(19));
 						}
 						EditorGUI.EndDisabledGroup();
 					}
@@ -95,13 +90,6 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 			EditorGUILayout.EndHorizontal();
 		}
 	}
-}
-
-
-[CustomEditor(typeof(GameObjectPoolBehaviour))]
-public class GameObjectPoolBehaviourEditor : ObjectPoolBehaviourEditor<GameObject>
-{
-
 }
 
 #endif

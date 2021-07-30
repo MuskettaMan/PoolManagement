@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 public class ObjectPool<T> : IPooler<T>, IDisposable
 {
@@ -31,8 +31,8 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 	private Stack<T> pooled;
 	private List<T> inUse;
 
-	public ObjectPool(ICreationService<T> creationService, 
-					  IPoolManagementService<T> poolManagementService, 
+	public ObjectPool(ICreationService<T> creationService,
+					  IPoolManagementService<T> poolManagementService,
 					  IDestructionService<T> destructionService,
 					  ObjectPoolConfig config = null)
 	{
@@ -66,7 +66,7 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 	public T RequestObject()
 	{
 		T objectToBeSend;
-		if(pooled.Count == 0)
+		if (pooled.Count == 0)
 		{
 			objectToBeSend = creationService.Create();
 			poolManagementService.ObjectCreated(objectToBeSend);
@@ -107,7 +107,7 @@ public class ObjectPool<T> : IPooler<T>, IDisposable
 			pooled.Clear();
 		}
 
-		if(config.shouldDestroyInUseObjects)
+		if (config.shouldDestroyInUseObjects)
 		{
 			foreach (T @object in inUse)
 			{

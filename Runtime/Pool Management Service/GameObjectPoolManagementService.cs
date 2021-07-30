@@ -5,21 +5,18 @@ public class GameObjectPoolManagementService : IPoolManagementService<GameObject
 	private bool useSendMessages;
 	private Transform originalParent;
 
-	public GameObjectPoolManagementService(bool useSendMessages)
-	{
-		this.useSendMessages = useSendMessages;
-	}
+	public GameObjectPoolManagementService(bool useSendMessages) => this.useSendMessages = useSendMessages;
 
 	public void ObjectCreated(GameObject @object)
 	{
-		originalParent = @object.transform;
+		originalParent = @object.transform.parent;
 		@object.SetActive(false);
 	}
 
 	public void ObjectRequested(GameObject @object)
 	{
 		@object.SetActive(true);
-		if(useSendMessages)
+		if (useSendMessages)
 			@object.SendMessage("Requested", SendMessageOptions.DontRequireReceiver);
 	}
 

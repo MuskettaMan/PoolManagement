@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [DisallowMultipleComponent]
 public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T : Object
@@ -25,13 +23,25 @@ public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	protected virtual void Awake()
 	{
-		InitializeServices();
+		try
+		{
+			InitializeServices();
+		}
+		catch
+		{
+			Debug.LogError("There was an issue during the initialization of the object pool services. " +
+						   "Please make sure that during the override of any services that no exceptions are thrown. " +
+						   "Do check your other logs and errors to resolve the current issue.");
+			throw;
+		}
+
 		ObjectPool = new ObjectPool<T>(CreationService, PoolManagementService, DestructionService, config);
 	}
 
 	protected virtual void OnDestroy()
 	{
-		ObjectPool.Dispose();
+		if (ObjectPool != null)
+			ObjectPool.Dispose();
 	}
 
 	public T RequestObject() => ObjectPool.RequestObject();
@@ -43,19 +53,19 @@ public abstract class ObjectPoolBehaviour<T> : MonoBehaviour, IPooler<T> where T
 			pooledObjectsParent = transform;
 		return new UnityObjectCreationService<T>(prefab, pooledObjectsParent);
 	}
-	protected virtual IPoolManagementService<T> InitializePoolManagementService()
-	{
-		return new EmptyPoolManagementService<T>();
-	}
-	protected virtual IDestructionService<T> InitializeDestructionService()
-	{
-		return new UnityObjectDestructionService<T>();
-	}
+	protected virtual IPoolManagementService<T> InitializePoolManagementService() => new EmptyPoolManagementService<T>();
+	protected virtual IDestructionService<T> InitializeDestructionService() => new UnityObjectDestructionService<T>();
 
 	private void InitializeServices()
 	{
 		CreationService = InitializeCreationService();
 		PoolManagementService = InitializePoolManagementService();
 		DestructionService = InitializeDestructionService();
+	}
+
+	private void Reset()
+	{
+		config = new ObjectPool<T>.ObjectPoolConfig(0, true, false);
+		pooledObjectsParent = transform;
 	}
 }

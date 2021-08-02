@@ -1,0 +1,9 @@
+#if UNITY_EDITOR
+
+using UnityEditor;
+using UnityEngine;
+
+[CustomEditor(typeof(TYPE_NAME))]
+public class TYPE_NAMEEditor : ObjectPoolBehaviourEditor<GENERIC_NAME> { }
+
+#endif

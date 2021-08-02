@@ -54,7 +54,7 @@ public class TestPoolableComponentPoolManagementService
 		creationService.Create().Returns(new GameObject().AddComponent<PoolableObject>());
 
 		// Pool management service.
-		GameObjectPoolManagementService gameObjectPoolManagementService = Substitute.For<GameObjectPoolManagementService>(false);
+		GameObjectPoolManagementService gameObjectPoolManagementService = Substitute.For<GameObjectPoolManagementService>(false, new GameObject().transform);
 		PoolableObjectPoolManagementService<PoolableObject> poolableObjectPoolManagementService = Substitute.For<PoolableObjectPoolManagementService<PoolableObject>>();
 		IPoolManagementService<PoolableObject> poolManagementService = new PoolableComponentPoolManagementService<PoolableObject>(gameObjectPoolManagementService, poolableObjectPoolManagementService);
 

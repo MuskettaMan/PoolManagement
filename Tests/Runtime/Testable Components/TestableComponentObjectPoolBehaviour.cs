@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class TestableComponentObjectPoolBehaviour : ComponentObjectPoolBehaviour<Transform>
 {
-	public GameObjectPoolManagementService GameObjectPoolManagementService { get; private set; } = Substitute.For<GameObjectPoolManagementService>(true);
+	public GameObjectPoolManagementService GameObjectPoolManagementService { get; private set; }
 	public ComponentPoolManagementService<Transform> ComponentPoolManagementService { get; private set; }
 
 	protected override void Awake()
 	{
-		prefab = new GameObject().transform;
+		GameObjectPoolManagementService = Substitute.For<GameObjectPoolManagementService>(true, transform);
 		ComponentPoolManagementService = new ComponentPoolManagementService<Transform>(GameObjectPoolManagementService);
+		prefab = new GameObject().transform;
 		base.Awake();
 	}
 

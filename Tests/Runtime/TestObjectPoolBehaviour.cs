@@ -53,8 +53,10 @@ public class TestObjectPoolBehaviour
 	[Test]
 	public void Instantiation_PoolBehaviour_GetsPlacedUnderPoolParent()
 	{
-		// Act
+		// Arrange
 		var pool = CreateDefaultObjectPoolBehaviour();
+
+		// Act
 		var @object = pool.RequestObject();
 		pool.ReturnObject(@object);
 

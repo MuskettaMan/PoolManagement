@@ -1,23 +1,26 @@
 #if UNITY_EDITOR
 
+using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+
+using Object = UnityEngine.Object;
 
 [CanEditMultipleObjects]
 public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 {
-	private ObjectPoolBehaviour<T>[] objectPools;
-	private ObjectPoolBehaviour<T> objectPool => objectPools[0];
+	private ObjectPoolBehaviour<T> objectPoolBehaviour;
+	private ObjectPool<T> objectPool;
 
 	private const int COMBINED_POOL_OBJECT_TOTAL_CAP = 100;
 
 	private void OnEnable()
 	{
-		objectPools = new ObjectPoolBehaviour<T>[targets.Length];
-		for (int i = 0; i < objectPools.Length; i++)
-		{
-			objectPools[i] = (ObjectPoolBehaviour<T>)targets[i];
-		}
+		objectPoolBehaviour = (ObjectPoolBehaviour<T>)target;
+		Type type = typeof(ObjectPoolBehaviour<T>);
+		PropertyInfo propertyInfo = type.GetProperty("ObjectPool", BindingFlags.NonPublic | BindingFlags.Instance);
+		objectPool = (ObjectPool<T>)propertyInfo.GetValue(objectPoolBehaviour);
 	}
 
 	public override void OnInspectorGUI()
@@ -29,12 +32,12 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 
 		if (Application.isPlaying)
 		{
-			if (objectPool.ObjectPool == null)
+			if (objectPool == null)
 				return;
 
 			EditorGUILayout.Space();
 
-			if (objectPool.ObjectPool.InUse.Count + objectPool.ObjectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
+			if (objectPool.InUse.Count + objectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
 			{
 				EditorGUILayout.HelpBox($"Because there are more than {COMBINED_POOL_OBJECT_TOTAL_CAP} {typeof(T).Name}s being pooled the extended editor won't be shown.", MessageType.Warning);
 				return;
@@ -42,25 +45,25 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 
 			EditorGUILayout.BeginHorizontal();
 			{
-				EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 13));
+				EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
 				{
-					GUILayout.Label($"In Use {typeof(T).Name}{(objectPool.ObjectPool.InUse.Count > 1 ? "s" : string.Empty)}", boldLabel);
+					GUILayout.Label($"In Use {typeof(T).Name}{(objectPool.InUse.Count > 1 ? "s" : string.Empty)}", boldLabel);
 
-					if (objectPool.ObjectPool.InUse.Count == 0)
+					if (objectPool.InUse.Count == 0)
 						EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in use.", MessageType.Info);
 
-					for (int i = 0; i < objectPool.ObjectPool.InUse.Count; i++)
+					for (int i = 0; i < objectPool.InUse.Count; i++)
 					{
 						EditorGUILayout.BeginHorizontal();
 						{
 							EditorGUI.BeginDisabledGroup(true);
 							{
-								EditorGUILayout.ObjectField(objectPool.ObjectPool.InUse[i], typeof(T), true);
+								EditorGUILayout.ObjectField(objectPool.InUse[i], typeof(T), true);
 							}
 							EditorGUI.EndDisabledGroup();
 							if (GUILayout.Button("\u2192"))
 							{
-								objectPool.ObjectPool.ReturnObject(objectPool.ObjectPool.InUse[i]);
+								objectPool.ReturnObject(objectPool.InUse[i]);
 								return;
 							}
 						}
@@ -69,18 +72,18 @@ public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
 				}
 				EditorGUILayout.EndVertical();
 
-				EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 13));
+				EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
 				{
-					GUILayout.Label($"Pooled {typeof(T).Name}{(objectPool.ObjectPool.Pooled.Count > 1 ? "s" : string.Empty)}", boldLabel);
+					GUILayout.Label($"Pooled {typeof(T).Name}{(objectPool.Pooled.Count > 1 ? "s" : string.Empty)}", boldLabel);
 
-					if (objectPool.ObjectPool.Pooled.Count == 0)
+					if (objectPool.Pooled.Count == 0)
 						EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in the pool.", MessageType.Info);
 
-					for (int i = 0; i < objectPool.ObjectPool.Pooled.Count; i++)
+					for (int i = 0; i < objectPool.Pooled.Count; i++)
 					{
 						EditorGUI.BeginDisabledGroup(true);
 						{
-							EditorGUILayout.ObjectField(objectPool.ObjectPool.Pooled[i], typeof(T), true, GUILayout.Height(19));
+							EditorGUILayout.ObjectField(objectPool.Pooled[i], typeof(T), true, GUILayout.Height(19));
 						}
 						EditorGUI.EndDisabledGroup();
 					}

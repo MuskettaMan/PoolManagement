@@ -15,7 +15,7 @@ public static class EditorCreator
 	private const string PACKAGE_PATH = "Packages/musketta.poolmanagement";
 
 	[MenuItem("Assets/PoolManagement/Create Editor Script")]
-	public static void MenuThing()
+	public static void CreateObjectPoolBehaviourEditor()
 	{
 		MonoScript scriptAsset = (MonoScript)Selection.activeObject;
 		Type systemType = scriptAsset.GetClass();
@@ -24,14 +24,11 @@ public static class EditorCreator
 		string scriptContents = template.text;
 		scriptContents = scriptContents.Replace(TYPE_NAME, systemType.Name);
 		scriptContents = scriptContents.Replace(GENERIC_NAME, FindObjectPoolGeneric(systemType).Name);
-		string scriptAssetPath = AssetDatabase.GetAssetPath(scriptAsset);
-		string editorScriptPath = $"{scriptAssetPath.Remove(scriptAssetPath.LastIndexOf('/'))}/{systemType.Name}Editor.cs";
-		File.WriteAllText(Path.GetFullPath(editorScriptPath), scriptContents);
-		AssetDatabase.Refresh();
+		CreateEditorFile(scriptAsset, systemType, scriptContents);
 	}
 
 	[MenuItem("Assets/PoolManagement/Create Editor Script", true)]
-	public static bool MenuThingValidation()
+	public static bool CreateObjectPoolBehaviourEditorValidation()
 	{
 		MonoScript scriptAsset = Selection.activeObject as MonoScript;
 		if (scriptAsset == null)
@@ -68,6 +65,15 @@ public static class EditorCreator
 		}
 
 		return false;
+	}
+
+	private static void CreateEditorFile(MonoScript scriptAsset, Type systemType, string scriptContents)
+	{
+		string scriptAssetPath = AssetDatabase.GetAssetPath(scriptAsset);
+		scriptAssetPath = scriptAssetPath.Remove(scriptAssetPath.LastIndexOf('/'));
+		string editorScriptPath = $"{scriptAssetPath}/{systemType.Name}Editor.cs";
+		File.WriteAllText(Path.GetFullPath(editorScriptPath), scriptContents);
+		AssetDatabase.Refresh();
 	}
 }
 

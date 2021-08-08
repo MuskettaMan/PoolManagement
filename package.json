@@ -1,13 +1,17 @@
 {
-    "name": "musketta.poolmanagement",
-    "version": "0.0.1",
-    "description": "Used for optimizing performance by initially creating all components instead of when they are needed.",
-    "displayName": "Pool Management",
-    "unity": "2020.1",
-    "author": {
-        "name": "Ferri de Lange",
-        "email": "ferri@ferri.dev",
-        "url": "https://ferri.dev"
-    },
-    "keywords": ["Optimization", "Pooling", "Object Pooling"]
+  "name": "musketta.poolmanagement",
+  "version": "1.0.0",
+  "description": "Used for optimizing performance by initially creating all components instead of when they are needed.",
+  "displayName": "Pool Management",
+  "unity": "2020.1",
+  "author": {
+    "name": "Ferri de Lange",
+    "email": "ferri@ferri.dev",
+    "url": "https://ferri.dev"
+  },
+  "keywords": [
+    "Optimization",
+    "Pooling",
+    "Object Pooling"
+  ]
 }

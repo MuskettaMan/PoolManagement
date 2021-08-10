@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Musketta.PoolManagement.Editor
 {
 	[CustomEditor(typeof(GameObjectPoolBehaviour))]
-	public class GameObjectPoolBehaviourEditor : ObjectPoolBehaviourEditor<GameObject> { } 
+	public class GameObjectPoolBehaviourEditor : ObjectPoolBehaviourEditor<GameObject> { }
 }
 
 #endif

@@ -1,9 +1,5 @@
 ﻿using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Musketta.PoolManagement.Tests
 {
@@ -61,5 +57,5 @@ namespace Musketta.PoolManagement.Tests
 				this.destructionService = destructionService;
 			}
 		}
-	} 
+	}
 }

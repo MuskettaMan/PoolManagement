@@ -1,11 +1,6 @@
-﻿using NSubstitute;
-using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Reflection;
-using UnityEngine.TestTools;
+﻿using NUnit.Framework;
 using UnityEditor;
+using UnityEngine;
 
 namespace Musketta.PoolManagement.Tests
 {
@@ -14,16 +9,10 @@ namespace Musketta.PoolManagement.Tests
 		private GameObjectPoolBehaviour gameObjectPoolBehaviour;
 
 		[SetUp]
-		public void SetUp()
-		{
-			gameObjectPoolBehaviour = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObjectPoolBehaviour>("Packages/musketta.poolmanagement/Tests/Runtime/Prefabs/GameObjectPoolBehaviour.prefab"));
-		}
+		public void SetUp() => gameObjectPoolBehaviour = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObjectPoolBehaviour>("Packages/musketta.poolmanagement/Tests/Runtime/Prefabs/GameObjectPoolBehaviour.prefab"));
 
 		[TearDown]
-		public void TearDown()
-		{
-			Object.Destroy(gameObjectPoolBehaviour.gameObject);
-		}
+		public void TearDown() => Object.Destroy(gameObjectPoolBehaviour.gameObject);
 
 		[Test]
 		public void RequestGameObject_FromPool_IsActive()

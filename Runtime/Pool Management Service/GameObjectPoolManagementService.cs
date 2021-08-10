@@ -41,10 +41,7 @@ namespace Musketta.PoolManagement
 		/// When the <see cref="GameObject"/> is created it sets it to inactive.
 		/// </summary>
 		/// <param name="object"><inheritdoc/></param>
-		public void ObjectCreated(GameObject @object)
-		{
-			@object.SetActive(false);
-		}
+		public void ObjectCreated(GameObject @object) => @object.SetActive(false);
 
 		/// <summary>
 		/// When the <see cref="GameObject"/> is requested it's set to active and, if enabled, a message gets send.

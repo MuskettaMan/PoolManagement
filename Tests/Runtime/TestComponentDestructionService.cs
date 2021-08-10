@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using NUnit.Framework;
-using UnityEngine.TestTools;
+﻿using NUnit.Framework;
 using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Musketta.PoolManagement.Tests
 {
@@ -39,5 +38,5 @@ namespace Musketta.PoolManagement.Tests
 
 			Assert.Throws<ArgumentNullException>(testCode);
 		}
-	} 
+	}
 }

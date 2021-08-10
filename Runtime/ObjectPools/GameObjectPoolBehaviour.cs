@@ -31,5 +31,5 @@ namespace Musketta.PoolManagement
 		protected override IPoolManagementService<GameObject> InitializePoolManagementService() => new GameObjectPoolManagementService(useSendMessages, transform);
 		#endregion
 		#endregion
-	} 
+	}
 }

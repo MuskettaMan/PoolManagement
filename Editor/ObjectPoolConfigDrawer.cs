@@ -47,7 +47,7 @@ namespace Musketta.PoolManagement.Editor
 			}
 			EditorGUI.EndDisabledGroup();
 		}
-	} 
+	}
 }
 
 

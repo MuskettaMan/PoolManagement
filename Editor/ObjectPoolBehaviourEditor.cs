@@ -4,9 +4,8 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-
-using Object = UnityEngine.Object;
 using CustomEditor = UnityEditor.Editor;
+using Object = UnityEngine.Object;
 
 namespace Musketta.PoolManagement.Editor
 {
@@ -96,7 +95,7 @@ namespace Musketta.PoolManagement.Editor
 				EditorGUILayout.EndHorizontal();
 			}
 		}
-	} 
+	}
 }
 
 #endif

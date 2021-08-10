@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
+using System.Collections;
 using UnityEngine;
-using NSubstitute;
-using NUnit.Framework;
 using UnityEngine.TestTools;
 
 namespace Musketta.PoolManagement.Tests
@@ -70,9 +68,6 @@ namespace Musketta.PoolManagement.Tests
 		}
 
 
-		private ObjectPoolBehaviour<PoolableObject> CreateDefaultObjectPoolBehaviour()
-		{
-			return new GameObject().AddComponent<TestableObjectPoolBehaviour>();
-		}
-	} 
+		private ObjectPoolBehaviour<PoolableObject> CreateDefaultObjectPoolBehaviour() => new GameObject().AddComponent<TestableObjectPoolBehaviour>();
+	}
 }

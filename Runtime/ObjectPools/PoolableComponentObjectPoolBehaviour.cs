@@ -14,14 +14,11 @@ namespace Musketta.PoolManagement
 		/// Initializes the pool management service to <see cref="PoolableComponentPoolManagementService{T}"/>.
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		protected override IPoolManagementService<T> InitializePoolManagementService()
-		{
-			return new PoolableComponentPoolManagementService<T>(
+		protected override IPoolManagementService<T> InitializePoolManagementService() => new PoolableComponentPoolManagementService<T>(
 				  new GameObjectPoolManagementService(useSendMessages, transform),
 				  new PoolableObjectPoolManagementService<T>()
 			);
-		}
 		#endregion
 		#endregion
-	} 
+	}
 }

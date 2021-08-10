@@ -33,5 +33,5 @@
 		public void ObjectDestroyed(T @object) { }
 		#endregion
 		#endregion
-	} 
+	}
 }

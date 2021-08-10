@@ -154,5 +154,5 @@ namespace Musketta.PoolManagement
 		public void ReturnObject(T @object) => ObjectPool.ReturnObject(@object);
 		#endregion
 		#endregion
-	} 
+	}
 }

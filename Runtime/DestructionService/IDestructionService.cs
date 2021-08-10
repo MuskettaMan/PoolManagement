@@ -11,5 +11,5 @@
 		/// </summary>
 		/// <param name="object">The object that should be destroyed.</param>
 		void Destroy(T @object);
-	} 
+	}
 }

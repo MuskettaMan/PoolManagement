@@ -33,5 +33,5 @@
 		/// <param name="object">The object that was destroyed.</param>
 		/// <remarks>This should only be called by the <see cref="ObjectPool{T}"/>.</remarks>
 		void ObjectDestroyed(T @object);
-	} 
+	}
 }

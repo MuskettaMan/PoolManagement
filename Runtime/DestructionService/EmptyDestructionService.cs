@@ -15,5 +15,5 @@
 		public void Destroy(T @object) { }
 		#endregion
 		#endregion
-	} 
+	}
 }

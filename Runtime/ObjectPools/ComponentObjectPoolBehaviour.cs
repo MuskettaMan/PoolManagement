@@ -40,5 +40,5 @@ namespace Musketta.PoolManagement
 			=> new ComponentDestructionService<T>(new UnityObjectDestructionService<GameObject>());
 		#endregion
 		#endregion
-	} 
+	}
 }

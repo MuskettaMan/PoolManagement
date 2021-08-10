@@ -48,5 +48,5 @@ namespace Musketta.PoolManagement
 		public T Create() => UnityObject.Instantiate(prefab, parent);
 		#endregion
 		#endregion
-	} 
+	}
 }

@@ -1,11 +1,8 @@
 #if UNITY_EDITOR
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Musketta.PoolManagement.Editor
@@ -77,7 +74,7 @@ namespace Musketta.PoolManagement.Editor
 			File.WriteAllText(Path.GetFullPath(editorScriptPath), scriptContents);
 			AssetDatabase.Refresh();
 		}
-	} 
+	}
 }
 
 #endif

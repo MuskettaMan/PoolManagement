@@ -16,5 +16,5 @@ namespace Musketta.PoolManagement
 		/// </summary>
 		/// <remarks>Should only be called by the <see cref="PoolableObjectPoolManagementService{T}"/> that was passed to the <see cref="ObjectPool{T}"/> this object belongs to.</remarks>
 		void Returned();
-	} 
+	}
 }

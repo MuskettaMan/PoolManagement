@@ -22,10 +22,7 @@ namespace Musketta.PoolManagement
 		/// Creates a new <see cref="ComponentPoolManagementService{T}"/> based on a <see cref="GameObjectPoolManagementService"/>.
 		/// </summary>
 		/// <param name="gameObjectPoolManagementService">Used to base this service on.</param>
-		public ComponentPoolManagementService(GameObjectPoolManagementService gameObjectPoolManagementService)
-		{
-			this.gameObjectPoolManagementService = gameObjectPoolManagementService;
-		}
+		public ComponentPoolManagementService(GameObjectPoolManagementService gameObjectPoolManagementService) => this.gameObjectPoolManagementService = gameObjectPoolManagementService;
 		#endregion
 
 		#region Methods
@@ -55,5 +52,5 @@ namespace Musketta.PoolManagement
 		public virtual void ObjectDestroyed(T @object) => gameObjectPoolManagementService.ObjectDestroyed(@object.gameObject);
 		#endregion
 		#endregion
-	} 
+	}
 }

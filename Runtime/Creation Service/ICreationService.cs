@@ -11,5 +11,5 @@
 		/// </summary>
 		/// <returns>The object that was created.</returns>
 		T Create();
-	} 
+	}
 }

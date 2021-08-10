@@ -34,5 +34,5 @@
 		public void ObjectReturned(T @object) => @object.Returned();
 		#endregion
 		#endregion
-	} 
+	}
 }

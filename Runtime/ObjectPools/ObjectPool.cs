@@ -242,5 +242,5 @@ namespace Musketta.PoolManagement
 		}
 		#endregion
 		#endregion
-	} 
+	}
 }

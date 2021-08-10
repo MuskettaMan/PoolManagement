@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestableComponent : MonoBehaviour
+namespace Musketta.PoolManagement.Tests
 {
-	public bool RequestedCalled { get; private set; }
-	public bool ReturnedCalled { get; private set; }
-
-	public void Requested() => RequestedCalled = true;
-	public void Returned() => ReturnedCalled = true;
-
-	private void Awake()
+	public class TestableComponent : MonoBehaviour
 	{
-		name = nameof(TestableComponent);
-	}
+		public bool RequestedCalled { get; private set; }
+		public bool ReturnedCalled { get; private set; }
+
+		public void Requested() => RequestedCalled = true;
+		public void Returned() => ReturnedCalled = true;
+
+		private void Awake()
+		{
+			name = nameof(TestableComponent);
+		}
+	} 
 }

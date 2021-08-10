@@ -4,54 +4,57 @@ using UnityEngine;
 using NUnit.Framework;
 using NSubstitute;
 
-public class TestComponentPoolManagementService : MonoBehaviour
+namespace Musketta.PoolManagement.Tests
 {
-	public TestableComponentObjectPoolBehaviour componentObjectPoolBehaviour;
-
-	[SetUp]
-	public void SetUp()
+	public class TestComponentPoolManagementService : MonoBehaviour
 	{
-		componentObjectPoolBehaviour = new GameObject().AddComponent<TestableComponentObjectPoolBehaviour>();
-	}
+		public TestableComponentObjectPoolBehaviour componentObjectPoolBehaviour;
 
-	[TearDown]
-	public void TearDown()
-	{
-		Destroy(componentObjectPoolBehaviour.gameObject);
-	}
+		[SetUp]
+		public void SetUp()
+		{
+			componentObjectPoolBehaviour = new GameObject().AddComponent<TestableComponentObjectPoolBehaviour>();
+		}
 
-	[Test]
-	public void ObjectCreated_WhenRequestingEmptyPool_GameObjectPoolManagementServiceCreatedIsCalled()
-	{
-		var @object = componentObjectPoolBehaviour.RequestObject();
+		[TearDown]
+		public void TearDown()
+		{
+			Destroy(componentObjectPoolBehaviour.gameObject);
+		}
 
-		componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectCreated(@object.gameObject);
-	}
+		[Test]
+		public void ObjectCreated_WhenRequestingEmptyPool_GameObjectPoolManagementServiceCreatedIsCalled()
+		{
+			var @object = componentObjectPoolBehaviour.RequestObject();
 
-	[Test]
-	public void ObjectDestroyed_WhenDestroyingPool_GameObjectPoolManagementServiceDestroyedIsCalled()
-	{
-		var @object = componentObjectPoolBehaviour.RequestObject();
-		componentObjectPoolBehaviour.ReturnObject(@object);
-		Destroy(componentObjectPoolBehaviour);
+			componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectCreated(@object.gameObject);
+		}
 
-		componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectDestroyed(@object.gameObject);
-	}
+		[Test]
+		public void ObjectDestroyed_WhenDestroyingPool_GameObjectPoolManagementServiceDestroyedIsCalled()
+		{
+			var @object = componentObjectPoolBehaviour.RequestObject();
+			componentObjectPoolBehaviour.ReturnObject(@object);
+			Destroy(componentObjectPoolBehaviour);
 
-	[Test]
-	public void ObjectRequested_WhenRequestingEmptyPool_GameObjectPoolManagementServiceRequestedIsCalled()
-	{
-		var @object = componentObjectPoolBehaviour.RequestObject();
+			componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectDestroyed(@object.gameObject);
+		}
 
-		componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectRequested(@object.gameObject);
-	}
+		[Test]
+		public void ObjectRequested_WhenRequestingEmptyPool_GameObjectPoolManagementServiceRequestedIsCalled()
+		{
+			var @object = componentObjectPoolBehaviour.RequestObject();
 
-	[Test]
-	public void ObjectReturned_WhenReturningToPool_GameObjectPoolManagementServiceReturnedIsCalled()
-	{
-		var @object = componentObjectPoolBehaviour.RequestObject();
-		componentObjectPoolBehaviour.ReturnObject(@object);
+			componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectRequested(@object.gameObject);
+		}
 
-		componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectReturned(@object.gameObject);
-	}
+		[Test]
+		public void ObjectReturned_WhenReturningToPool_GameObjectPoolManagementServiceReturnedIsCalled()
+		{
+			var @object = componentObjectPoolBehaviour.RequestObject();
+			componentObjectPoolBehaviour.ReturnObject(@object);
+
+			componentObjectPoolBehaviour.GameObjectPoolManagementService.Received().ObjectReturned(@object.gameObject);
+		}
+	} 
 }

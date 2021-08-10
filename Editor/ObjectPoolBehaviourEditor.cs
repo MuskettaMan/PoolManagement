@@ -6,93 +6,97 @@ using UnityEditor;
 using UnityEngine;
 
 using Object = UnityEngine.Object;
+using CustomEditor = UnityEditor.Editor;
 
-[CanEditMultipleObjects]
-public class ObjectPoolBehaviourEditor<T> : Editor where T : Object
+namespace Musketta.PoolManagement.Editor
 {
-	private ObjectPoolBehaviour<T> objectPoolBehaviour;
-	private ObjectPool<T> objectPool;
-
-	private const int COMBINED_POOL_OBJECT_TOTAL_CAP = 100;
-
-	private void OnEnable()
+	[CanEditMultipleObjects]
+	public class ObjectPoolBehaviourEditor<T> : CustomEditor where T : Object
 	{
-		objectPoolBehaviour = (ObjectPoolBehaviour<T>)target;
-		Type type = typeof(ObjectPoolBehaviour<T>);
-		PropertyInfo propertyInfo = type.GetProperty("ObjectPool", BindingFlags.NonPublic | BindingFlags.Instance);
-		objectPool = (ObjectPool<T>)propertyInfo.GetValue(objectPoolBehaviour);
-	}
+		private ObjectPoolBehaviour<T> objectPoolBehaviour;
+		private ObjectPool<T> objectPool;
 
-	public override void OnInspectorGUI()
-	{
-		base.OnInspectorGUI();
+		private const int COMBINED_POOL_OBJECT_TOTAL_CAP = 100;
 
-		GUIStyle boldLabel = new GUIStyle(GUI.skin.label);
-		boldLabel.fontStyle = FontStyle.Bold;
-
-		if (Application.isPlaying)
+		private void OnEnable()
 		{
-			if (objectPool == null)
-				return;
+			objectPoolBehaviour = (ObjectPoolBehaviour<T>)target;
+			Type type = typeof(ObjectPoolBehaviour<T>);
+			PropertyInfo propertyInfo = type.GetProperty("ObjectPool", BindingFlags.NonPublic | BindingFlags.Instance);
+			objectPool = (ObjectPool<T>)propertyInfo.GetValue(objectPoolBehaviour);
+		}
 
-			EditorGUILayout.Space();
+		public override void OnInspectorGUI()
+		{
+			base.OnInspectorGUI();
 
-			if (objectPool.InUse.Count + objectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
+			GUIStyle boldLabel = new GUIStyle(GUI.skin.label);
+			boldLabel.fontStyle = FontStyle.Bold;
+
+			if (Application.isPlaying)
 			{
-				EditorGUILayout.HelpBox($"Because there are more than {COMBINED_POOL_OBJECT_TOTAL_CAP} {typeof(T).Name}s being pooled the extended editor won't be shown.", MessageType.Warning);
-				return;
-			}
+				if (objectPool == null)
+					return;
 
-			EditorGUILayout.BeginHorizontal();
-			{
-				EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
+				EditorGUILayout.Space();
+
+				if (objectPool.InUse.Count + objectPool.Pooled.Count > COMBINED_POOL_OBJECT_TOTAL_CAP)
 				{
-					GUILayout.Label($"In Use {typeof(T).Name}{(objectPool.InUse.Count > 1 ? "s" : string.Empty)}", boldLabel);
+					EditorGUILayout.HelpBox($"Because there are more than {COMBINED_POOL_OBJECT_TOTAL_CAP} {typeof(T).Name}s being pooled the extended editor won't be shown.", MessageType.Warning);
+					return;
+				}
 
-					if (objectPool.InUse.Count == 0)
-						EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in use.", MessageType.Info);
-
-					for (int i = 0; i < objectPool.InUse.Count; i++)
+				EditorGUILayout.BeginHorizontal();
+				{
+					EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
 					{
-						EditorGUILayout.BeginHorizontal();
+						GUILayout.Label($"In Use {typeof(T).Name}{(objectPool.InUse.Count > 1 ? "s" : string.Empty)}", boldLabel);
+
+						if (objectPool.InUse.Count == 0)
+							EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in use.", MessageType.Info);
+
+						for (int i = 0; i < objectPool.InUse.Count; i++)
+						{
+							EditorGUILayout.BeginHorizontal();
+							{
+								EditorGUI.BeginDisabledGroup(true);
+								{
+									EditorGUILayout.ObjectField(objectPool.InUse[i], typeof(T), true);
+								}
+								EditorGUI.EndDisabledGroup();
+								if (GUILayout.Button("\u2192"))
+								{
+									objectPool.ReturnObject(objectPool.InUse[i]);
+									return;
+								}
+							}
+							EditorGUILayout.EndHorizontal();
+						}
+					}
+					EditorGUILayout.EndVertical();
+
+					EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
+					{
+						GUILayout.Label($"Pooled {typeof(T).Name}{(objectPool.Pooled.Count > 1 ? "s" : string.Empty)}", boldLabel);
+
+						if (objectPool.Pooled.Count == 0)
+							EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in the pool.", MessageType.Info);
+
+						for (int i = 0; i < objectPool.Pooled.Count; i++)
 						{
 							EditorGUI.BeginDisabledGroup(true);
 							{
-								EditorGUILayout.ObjectField(objectPool.InUse[i], typeof(T), true);
+								EditorGUILayout.ObjectField(objectPool.Pooled[i], typeof(T), true, GUILayout.Height(19));
 							}
 							EditorGUI.EndDisabledGroup();
-							if (GUILayout.Button("\u2192"))
-							{
-								objectPool.ReturnObject(objectPool.InUse[i]);
-								return;
-							}
 						}
-						EditorGUILayout.EndHorizontal();
 					}
+					EditorGUILayout.EndVertical();
 				}
-				EditorGUILayout.EndVertical();
-
-				EditorGUILayout.BeginVertical(GUILayout.MinWidth(Screen.width / 2 - 13));
-				{
-					GUILayout.Label($"Pooled {typeof(T).Name}{(objectPool.Pooled.Count > 1 ? "s" : string.Empty)}", boldLabel);
-
-					if (objectPool.Pooled.Count == 0)
-						EditorGUILayout.HelpBox($"Currently there are no {typeof(T).Name}s in the pool.", MessageType.Info);
-
-					for (int i = 0; i < objectPool.Pooled.Count; i++)
-					{
-						EditorGUI.BeginDisabledGroup(true);
-						{
-							EditorGUILayout.ObjectField(objectPool.Pooled[i], typeof(T), true, GUILayout.Height(19));
-						}
-						EditorGUI.EndDisabledGroup();
-					}
-				}
-				EditorGUILayout.EndVertical();
+				EditorGUILayout.EndHorizontal();
 			}
-			EditorGUILayout.EndHorizontal();
 		}
-	}
+	} 
 }
 
 #endif

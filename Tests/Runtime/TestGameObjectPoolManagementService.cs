@@ -7,62 +7,65 @@ using System.Reflection;
 using UnityEngine.TestTools;
 using UnityEditor;
 
-public class TestGameObjectPoolManagementService
+namespace Musketta.PoolManagement.Tests
 {
-	private GameObjectPoolBehaviour gameObjectPoolBehaviour;
-
-	[SetUp]
-	public void SetUp()
+	public class TestGameObjectPoolManagementService
 	{
-		gameObjectPoolBehaviour = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObjectPoolBehaviour>("Packages/musketta.poolmanagement/Tests/Runtime/Prefabs/GameObjectPoolBehaviour.prefab"));
-	}
-	
-	[TearDown]
-	public void TearDown()
-	{
-		Object.Destroy(gameObjectPoolBehaviour.gameObject);
-	}
+		private GameObjectPoolBehaviour gameObjectPoolBehaviour;
 
-	[Test]
-	public void RequestGameObject_FromPool_IsActive()
-	{
-		GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
+		[SetUp]
+		public void SetUp()
+		{
+			gameObjectPoolBehaviour = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObjectPoolBehaviour>("Packages/musketta.poolmanagement/Tests/Runtime/Prefabs/GameObjectPoolBehaviour.prefab"));
+		}
 
-		Assert.IsTrue(gameObject.activeSelf);
-	}
+		[TearDown]
+		public void TearDown()
+		{
+			Object.Destroy(gameObjectPoolBehaviour.gameObject);
+		}
 
-	[Test]
-	public void ReturnGameObject_ToPool_BecomesInactive()
-	{
-		GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
-		gameObjectPoolBehaviour.ReturnObject(gameObject);
+		[Test]
+		public void RequestGameObject_FromPool_IsActive()
+		{
+			GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
 
-		Assert.IsFalse(gameObject.activeSelf);
-	}
+			Assert.IsTrue(gameObject.activeSelf);
+		}
 
-	[Test]
-	public void ReturnGameObject_ToPool_IsSetToOriginalParent()
-	{
-		GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
-		gameObjectPoolBehaviour.ReturnObject(gameObject);
+		[Test]
+		public void ReturnGameObject_ToPool_BecomesInactive()
+		{
+			GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
+			gameObjectPoolBehaviour.ReturnObject(gameObject);
 
-		Assert.AreEqual(gameObjectPoolBehaviour.transform, gameObject.transform.parent);
-	}
+			Assert.IsFalse(gameObject.activeSelf);
+		}
 
-	[Test]
-	public void RequestGameObject_FromPool_UnityMessageCalled()
-	{
-		GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
+		[Test]
+		public void ReturnGameObject_ToPool_IsSetToOriginalParent()
+		{
+			GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
+			gameObjectPoolBehaviour.ReturnObject(gameObject);
 
-		Assert.IsTrue(gameObject.GetComponent<TestableComponent>().RequestedCalled);
-	}
+			Assert.AreEqual(gameObjectPoolBehaviour.transform, gameObject.transform.parent);
+		}
 
-	[Test]
-	public void ReturnGameObject_ToPool_UnityMessageCalled()
-	{
-		GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
-		gameObjectPoolBehaviour.ReturnObject(gameObject);
+		[Test]
+		public void RequestGameObject_FromPool_UnityMessageCalled()
+		{
+			GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
 
-		Assert.IsTrue(gameObject.GetComponent<TestableComponent>().ReturnedCalled);
+			Assert.IsTrue(gameObject.GetComponent<TestableComponent>().RequestedCalled);
+		}
+
+		[Test]
+		public void ReturnGameObject_ToPool_UnityMessageCalled()
+		{
+			GameObject gameObject = gameObjectPoolBehaviour.RequestObject();
+			gameObjectPoolBehaviour.ReturnObject(gameObject);
+
+			Assert.IsTrue(gameObject.GetComponent<TestableComponent>().ReturnedCalled);
+		}
 	}
 }

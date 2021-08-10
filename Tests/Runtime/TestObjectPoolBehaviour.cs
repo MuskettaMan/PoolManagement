@@ -5,71 +5,74 @@ using NSubstitute;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-public class TestObjectPoolBehaviour
+namespace Musketta.PoolManagement.Tests
 {
-	public class PoolableObject : MonoBehaviour { }
-	public class TestableObjectPoolBehaviour : ObjectPoolBehaviour<PoolableObject>
+	public class TestObjectPoolBehaviour
 	{
-		protected override void Awake()
+		public class PoolableObject : MonoBehaviour { }
+		public class TestableObjectPoolBehaviour : ObjectPoolBehaviour<PoolableObject>
 		{
-			prefab = new GameObject().AddComponent<PoolableObject>();
-			base.Awake();
+			protected override void Awake()
+			{
+				prefab = new GameObject().AddComponent<PoolableObject>();
+				base.Awake();
+			}
 		}
-	}
 
-	[Test]
-	public void RequestObject_AtAll_IsNotNull()
-	{
-		// Arrange
-		var pool = CreateDefaultObjectPoolBehaviour();
+		[Test]
+		public void RequestObject_AtAll_IsNotNull()
+		{
+			// Arrange
+			var pool = CreateDefaultObjectPoolBehaviour();
 
-		// Act
-		var @object = pool.RequestObject();
+			// Act
+			var @object = pool.RequestObject();
 
-		// Assert
-		Assert.IsNotNull(@object);
+			// Assert
+			Assert.IsNotNull(@object);
 
-		// Clean up
-		Object.Destroy(pool);
-	}
+			// Clean up
+			Object.Destroy(pool);
+		}
 
-	[UnityTest]
-	public IEnumerator Destroy_ObjectPoolBehaviour_Disposes()
-	{
-		// Arrange
-		var pool = CreateDefaultObjectPoolBehaviour();
-		var @object = pool.RequestObject();
-		pool.ReturnObject(@object);
+		[UnityTest]
+		public IEnumerator Destroy_ObjectPoolBehaviour_Disposes()
+		{
+			// Arrange
+			var pool = CreateDefaultObjectPoolBehaviour();
+			var @object = pool.RequestObject();
+			pool.ReturnObject(@object);
 
-		// Act
-		Object.Destroy(pool);
+			// Act
+			Object.Destroy(pool);
 
-		yield return null;
+			yield return null;
 
-		// Assert
-		Assert.IsTrue(@object == null);
-	}
+			// Assert
+			Assert.IsTrue(@object == null);
+		}
 
-	[Test]
-	public void Instantiation_PoolBehaviour_GetsPlacedUnderPoolParent()
-	{
-		// Arrange
-		var pool = CreateDefaultObjectPoolBehaviour();
+		[Test]
+		public void Instantiation_PoolBehaviour_GetsPlacedUnderPoolParent()
+		{
+			// Arrange
+			var pool = CreateDefaultObjectPoolBehaviour();
 
-		// Act
-		var @object = pool.RequestObject();
-		pool.ReturnObject(@object);
+			// Act
+			var @object = pool.RequestObject();
+			pool.ReturnObject(@object);
 
-		// Assert
-		Assert.AreEqual(pool.transform, @object.transform.parent);
+			// Assert
+			Assert.AreEqual(pool.transform, @object.transform.parent);
 
-		// Clean up
-		Object.Destroy(pool);
-	}
+			// Clean up
+			Object.Destroy(pool);
+		}
 
 
-	private ObjectPoolBehaviour<PoolableObject> CreateDefaultObjectPoolBehaviour()
-	{
-		return new GameObject().AddComponent<TestableObjectPoolBehaviour>();
-	}
+		private ObjectPoolBehaviour<PoolableObject> CreateDefaultObjectPoolBehaviour()
+		{
+			return new GameObject().AddComponent<TestableObjectPoolBehaviour>();
+		}
+	} 
 }

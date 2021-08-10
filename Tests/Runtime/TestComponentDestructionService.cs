@@ -5,36 +5,39 @@ using NUnit.Framework;
 using UnityEngine.TestTools;
 using System;
 
-public class TestComponentDestructionService
+namespace Musketta.PoolManagement.Tests
 {
-	[UnityTest]
-	public IEnumerator Destroy_Component_GameObjectIsDestroyed()
+	public class TestComponentDestructionService
 	{
-		IDestructionService<Transform> destructionService = new ComponentDestructionService<Transform>(new UnityObjectDestructionService<GameObject>());
-		Transform @object = new GameObject().transform;
+		[UnityTest]
+		public IEnumerator Destroy_Component_GameObjectIsDestroyed()
+		{
+			IDestructionService<Transform> destructionService = new ComponentDestructionService<Transform>(new UnityObjectDestructionService<GameObject>());
+			Transform @object = new GameObject().transform;
 
-		destructionService.Destroy(@object);
+			destructionService.Destroy(@object);
 
-		yield return null;
+			yield return null;
 
-		Assert.IsTrue(@object == null);
-	}
+			Assert.IsTrue(@object == null);
+		}
 
-	[Test]
-	public void Destroy_Null_ThrowsException()
-	{
-		IDestructionService<Transform> destructionService = new ComponentDestructionService<Transform>(new UnityObjectDestructionService<GameObject>());
+		[Test]
+		public void Destroy_Null_ThrowsException()
+		{
+			IDestructionService<Transform> destructionService = new ComponentDestructionService<Transform>(new UnityObjectDestructionService<GameObject>());
 
-		TestDelegate testCode = () => destructionService.Destroy(null);
+			TestDelegate testCode = () => destructionService.Destroy(null);
 
-		Assert.Throws<ArgumentNullException>(testCode);
-	}
+			Assert.Throws<ArgumentNullException>(testCode);
+		}
 
-	[Test]
-	public void Construct_WithNullUnityObjectDestructionService_ThrowsException()
-	{
-		TestDelegate testCode = () => new ComponentDestructionService<Transform>(null);
+		[Test]
+		public void Construct_WithNullUnityObjectDestructionService_ThrowsException()
+		{
+			TestDelegate testCode = () => new ComponentDestructionService<Transform>(null);
 
-		Assert.Throws<ArgumentNullException>(testCode);
-	}
+			Assert.Throws<ArgumentNullException>(testCode);
+		}
+	} 
 }

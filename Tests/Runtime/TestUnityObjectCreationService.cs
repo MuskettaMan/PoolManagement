@@ -5,40 +5,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
-public class TestUnityObjectCreationService
+namespace Musketta.PoolManagement.Tests
 {
-	[Test]
-	public void Create_WithNoParent_CanBeFoundInScene()
+	public class TestUnityObjectCreationService
 	{
-		MeshRenderer prefab = new GameObject("Initial Object").AddComponent<MeshRenderer>();
-		ICreationService<MeshRenderer> creationService = new UnityObjectCreationService<MeshRenderer>(prefab);
+		[Test]
+		public void Create_WithNoParent_CanBeFoundInScene()
+		{
+			MeshRenderer prefab = new GameObject("Initial Object").AddComponent<MeshRenderer>();
+			ICreationService<MeshRenderer> creationService = new UnityObjectCreationService<MeshRenderer>(prefab);
 
-		var created = creationService.Create();
+			var created = creationService.Create();
 
-		var found = UnityObject.FindObjectsOfType<MeshRenderer>();
-		Assert.IsTrue(Array.IndexOf(found, created) != -1);
+			var found = UnityObject.FindObjectsOfType<MeshRenderer>();
+			Assert.IsTrue(Array.IndexOf(found, created) != -1);
 
-		UnityObject.Destroy(prefab);
-		UnityObject.Destroy(created);
-	}
+			UnityObject.Destroy(prefab);
+			UnityObject.Destroy(created);
+		}
 
-	[Test]
-	public void Create_WithParent_IsUnderRightParent()
-	{
-		Transform parent = new GameObject("Parent").transform;
-		MeshRenderer prefab = new GameObject("Initial Object").AddComponent<MeshRenderer>();
-		ICreationService<MeshRenderer> creationService = new UnityObjectCreationService<MeshRenderer>(prefab, parent);
+		[Test]
+		public void Create_WithParent_IsUnderRightParent()
+		{
+			Transform parent = new GameObject("Parent").transform;
+			MeshRenderer prefab = new GameObject("Initial Object").AddComponent<MeshRenderer>();
+			ICreationService<MeshRenderer> creationService = new UnityObjectCreationService<MeshRenderer>(prefab, parent);
 
-		var created = creationService.Create();
+			var created = creationService.Create();
 
-		Assert.AreEqual(parent, created.transform.parent);
-	}
+			Assert.AreEqual(parent, created.transform.parent);
+		}
 
-	[Test]
-	public void Constructing_WithNullPrefab_ThrowsException()
-	{
-		TestDelegate testDelegate = () => new UnityObjectCreationService<MeshRenderer>(null);
+		[Test]
+		public void Constructing_WithNullPrefab_ThrowsException()
+		{
+			TestDelegate testDelegate = () => new UnityObjectCreationService<MeshRenderer>(null);
 
-		Assert.Throws<ArgumentNullException>(testDelegate);
-	}
+			Assert.Throws<ArgumentNullException>(testDelegate);
+		}
+	} 
 }

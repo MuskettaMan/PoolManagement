@@ -197,22 +197,23 @@ namespace Musketta.PoolManagement
 		{
 			if (config.shouldDestroyPooledObjects)
 			{
-				foreach (T @object in pooled)
-				{
-					poolManagementService.ObjectDestroyed(@object);
-					destructionService.Destroy(@object);
-				}
+				DisposeItems(pooled);
 				pooled.Clear();
 			}
 
 			if (config.shouldDestroyInUseObjects)
 			{
-				foreach (T @object in inUse)
+				DisposeItems(inUse);
+				inUse.Clear();
+			}
+
+			void DisposeItems(IEnumerable<T> itemsToDestroy)
+			{
+				foreach (T @object in itemsToDestroy)
 				{
 					poolManagementService.ObjectDestroyed(@object);
 					destructionService.Destroy(@object);
 				}
-				inUse.Clear();
 			}
 		}
 

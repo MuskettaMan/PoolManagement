@@ -1,5 +1,32 @@
 # Documentation
 
+## Table of Contents
+
+- [Documentation](#documentation)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Package Contents](#package-contents)
+  - [Installation Instructions](#installation-instructions)
+  - [Limitations](#limitations)
+  - [Workflows](#workflows)
+    - [Setup the GameObjectPoolBehaviour](#setup-the-gameobjectpoolbehaviour)
+    - [Setup the ComponentObjectPoolBehaviour](#setup-the-componentobjectpoolbehaviour)
+    - [Setup the PoolableComponentObjectPoolBehaviour](#setup-the-poolablecomponentobjectpoolbehaviour)
+    - [Setup the ObjectPool](#setup-the-objectpool)
+    - [Create Editor](#create-editor)
+      - [Automated](#automated)
+      - [Manual](#manual)
+  - [Advanced Topics](#advanced-topics)
+    - [Object Pool Services](#object-pool-services)
+  - [Reference](#reference)
+    - [ObjectPool API](#objectpool-api)
+      - [ObjectPool Fields](#objectpool-fields)
+      - [ObjectPool Methods](#objectpool-methods)
+    - [ObjectPoolBehaviour API](#objectpoolbehaviour-api)
+      - [ObjectPoolBehaviour Fields](#objectpoolbehaviour-fields)
+      - [ObjectPoolBehaviour Methods](#objectpoolbehaviour-methods)
+  - [Samples](#samples)
+
 ## Overview
 
 This package is an implementation of the [Object Pool](https://en.wikipedia.org/wiki/Object_pool_pattern) design pattern made for Unity. It contains the traditional implementation of the design pattern, but also a more specialized implementation dealing with how GameObjects are instantiated, maintained and destroyed.

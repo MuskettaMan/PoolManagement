@@ -10,9 +10,11 @@ This package is an implementation of the [Object Pool](https://en.wikipedia.org/
 
 The Getting Started will be divided in 3 parts, each part contains a way to immediately start using the package, but going from less to more setup required.
 
+*If this Getting Started section doesn't cover it, please look at the [documentation](Documentation~/DOCS.md). It's more extensive and gives more information.*
+
 ### GameObject Pool
 
-The `GameObjectPoolBehaviour` is the quickest way to get started, it's the only concrete implementation of the pattern in here due to it having the most flexable usage. To start using it you can place the `GameObjectPoolBehaviour` component on a GameObject of your choosing. 
+The `GameObjectPoolBehaviour` is the quickest way to get started, it's the only concrete implementation of the pattern in here due to it having the most flexable usage. To start using it you can place the `GameObjectPoolBehaviour` component on a GameObject of your choosing.
 
 ### Component Object Pool Behaviour
 

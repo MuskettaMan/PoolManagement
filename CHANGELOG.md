@@ -25,3 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - **PATCH** - Added `using` statement in editor create file to fix the initial compile error when creating an editor file.
 - **PATCH** - Fixed the null reference exception when opening the 'Create Editor Script' context menu.
 - **PATCH** - Fixed the import of the namespace for the generic argument.
+
+## [v2.0.1] - 2021-08-15
+
+*Nothing changed, incrementing version to figure out Github Actions.*

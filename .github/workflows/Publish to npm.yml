@@ -20,7 +20,8 @@ jobs:
         registry-url: https://registry.npmjs.org/
     
     # Publish to npm
-    - run: | 
+    - name: Publish
+      run: | 
         npm config set //registry.npmjs.org/:_authToken ${secrets.NPM_TOKEN}
         npm publish --access public
       env:

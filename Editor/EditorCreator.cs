@@ -13,6 +13,7 @@ namespace Musketta.PoolManagement.Editor
 		private const string GENERIC_NAME = "GENERIC_NAME";
 		private const string NAMESPACE_NAME = "NAMESPACE";
 		private const string PACKAGE_PATH = "Packages/musketta.poolmanagement";
+		private const string SCRIPT_FILE_SUFFIX = "Editor";
 
 		[MenuItem("Assets/PoolManagement/Create Editor Script")]
 		public static void CreateObjectPoolBehaviourEditor()
@@ -73,7 +74,7 @@ namespace Musketta.PoolManagement.Editor
 		{
 			string scriptAssetPath = AssetDatabase.GetAssetPath(scriptAsset);
 			scriptAssetPath = scriptAssetPath.Remove(scriptAssetPath.LastIndexOf('/'));
-			string editorScriptPath = $"{scriptAssetPath}/{systemType.Name}Editor.cs";
+			string editorScriptPath = $"{scriptAssetPath}/{systemType.Name}{SCRIPT_FILE_SUFFIX}.cs";
 			File.WriteAllText(Path.GetFullPath(editorScriptPath), scriptContents);
 			AssetDatabase.Refresh();
 		}

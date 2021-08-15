@@ -18,5 +18,4 @@
 		/// <param name="object">The object to return to the pool.</param>
 		void ReturnObject(T @object);
 	}
-
 }

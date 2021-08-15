@@ -11,6 +11,7 @@ namespace Musketta.PoolManagement.Editor
 	{
 		private const string TYPE_NAME = "TYPE_NAME";
 		private const string GENERIC_NAME = "GENERIC_NAME";
+		private const string NAMESPACE_NAME = "NAMESPACE";
 		private const string PACKAGE_PATH = "Packages/musketta.poolmanagement";
 
 		[MenuItem("Assets/PoolManagement/Create Editor Script")]
@@ -21,12 +22,14 @@ namespace Musketta.PoolManagement.Editor
 
 			TextAsset template = AssetDatabase.LoadAssetAtPath<TextAsset>($"{PACKAGE_PATH}/Editor/PoolTemplateEditor.txt");
 			string scriptContents = template.text;
+			Type genericType = FindObjectPoolGeneric(systemType);
+			scriptContents = scriptContents.Replace(NAMESPACE_NAME, genericType.Namespace ?? "UnityEngine");
 			scriptContents = scriptContents.Replace(TYPE_NAME, systemType.Name);
-			scriptContents = scriptContents.Replace(GENERIC_NAME, FindObjectPoolGeneric(systemType).Name);
+			scriptContents = scriptContents.Replace(GENERIC_NAME, genericType.Name);
 			CreateEditorFile(scriptAsset, systemType, scriptContents);
 		}
 
-		[MenuItem("Assets/PoolManagement/Create Editor Script", true)]
+		[MenuItem("Assets/Pool Management/Create Editor Script", true)]
 		public static bool CreateObjectPoolBehaviourEditorValidation()
 		{
 			MonoScript scriptAsset = Selection.activeObject as MonoScript;
@@ -58,9 +61,9 @@ namespace Musketta.PoolManagement.Editor
 			Type ongoing = sample;
 			while (ongoing != null)
 			{
-				ongoing = ongoing.BaseType;
-				if (ongoing.GetGenericTypeDefinition() == baseType)
+				if (ongoing.IsGenericType && ongoing.GetGenericTypeDefinition() == baseType)
 					return true;
+				ongoing = ongoing.BaseType;
 			}
 
 			return false;

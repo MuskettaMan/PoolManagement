@@ -41,12 +41,12 @@ namespace Musketta.PoolManagement
 		protected ICreationService<T> CreationService { get; private set; }
 
 		/// <summary>
-		/// The service used for creating the <see cref="Object"/>s.
+		/// The service used for managing the <see cref="Object"/>s.
 		/// </summary>
 		protected IPoolManagementService<T> PoolManagementService { get; private set; }
 
 		/// <summary>
-		/// The service used for creating the <see cref="Object"/>s.
+		/// The service used for destroying the <see cref="Object"/>s.
 		/// </summary>
 		protected IDestructionService<T> DestructionService { get; private set; }
 
@@ -145,13 +145,13 @@ namespace Musketta.PoolManagement
 		/// Returns an object from the pool so it can be used.
 		/// </summary>
 		/// <returns>The object from the pool that can be used.</returns>
-		public T RequestObject() => ObjectPool.RequestObject();
+		public virtual T RequestObject() => ObjectPool.RequestObject();
 
 		/// <summary>
 		/// Returns the given <paramref name="object"/> so it can be reused.
 		/// </summary>
 		/// <param name="object">The object to return, so it can be reused.</param>
-		public void ReturnObject(T @object) => ObjectPool.ReturnObject(@object);
+		public virtual void ReturnObject(T @object) => ObjectPool.ReturnObject(@object);
 		#endregion
 		#endregion
 	}

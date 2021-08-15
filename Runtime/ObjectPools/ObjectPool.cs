@@ -232,7 +232,7 @@ namespace Musketta.PoolManagement
 		/// <summary>
 		/// Whether the given object originally belonged to this pool.
 		/// </summary>
-		/// <param name="object">The object check whether it originally belonged in this pool</param>
+		/// <param name="object">The object check whether it originally belonged in this pool.</param>
 		/// <returns>Whether this object originally belonged in this pool.</returns>
 		public bool IsObjectInUse(T @object)
 		{

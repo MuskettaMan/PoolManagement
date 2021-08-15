@@ -1,13 +1,36 @@
 {
-    "name": "musketta.poolmanagement",
-    "version": "0.0.1",
-    "description": "Used for optimizing performance by initially creating all components instead of when they are needed.",
-    "displayName": "Pool Management",
-    "unity": "2020.1",
-    "author": {
-        "name": "Ferri de Lange",
-        "email": "ferri@ferri.dev",
-        "url": "https://ferri.dev"
+  "name": "musketta.poolmanagement",
+  "version": "2.0.0",
+  "description": "Used for optimizing performance by initially creating all components instead of when they are needed.",
+  "displayName": "Pool Management",
+  "author": {
+    "name": "Ferri de Lange",
+    "email": "ferri@ferri.dev",
+    "url": "https://ferri.dev"
+  },
+  "bugs": {
+    "url": "https://github.com/MuskettaMan/PoolManagement/issues"
+   },
+  "repository": {
+     "type": "git",
+     "url": "https://github.com/MuskettaMan/PoolManagement.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Optimization",
+    "Pooling",
+    "Object Pooling"
+  ],
+  "samples": [
+    {
+      "displayName": "PoolableComponentObjectPool Sample",
+      "description": "Contains a basic implementation of the PoolableComponentObjectPool class.",
+      "path": "Samples~/PoolableComponentObjectPool Sample"
     },
-    "keywords": ["Optimization", "Pooling", "Object Pooling"]
+    {
+      "displayName": "ComponentObjectPool Sample",
+      "description": "Contains a basic implementation of the ComponentObjectPool class.",
+      "path": "Samples~/ComponentObjectPool Sample"
+    }
+  ]
 }

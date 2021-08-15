@@ -1,7 +1,8 @@
 #if UNITY_EDITOR
 
 using UnityEditor;
-using UnityEngine;
+using Musketta.PoolManagement.Editor;
+using NAMESPACE;
 
 [CustomEditor(typeof(TYPE_NAME))]
 public class TYPE_NAMEEditor : ObjectPoolBehaviourEditor<GENERIC_NAME> { }
